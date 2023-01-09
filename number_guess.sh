@@ -25,3 +25,43 @@ else
   echo "Welcome back, $GET_USERNAME! You have played $GET_GAMES_PLAYED games, and your best game took $GET_BEST_GAME guesses."
 fi
 
+# GAME
+INITIAL_MESSAGE="\nGuess the secret number between 1 and 1000:"
+TRY_NUM=0
+GAME() {
+  echo -e $1
+  read TRY
+
+  if [[ -z $TRY || ! $TRY =~ ^[0-9]*$ ]]
+  then
+    GAME "\nThat is not an integer, guess again:"
+  elif [[ $RANDOM_NUM -lt $TRY ]]
+  then
+    TRY_NUM=$(( $TRY_NUM + 1 ))
+    GAME "\nIt's lower than that, guess again:"
+  elif [[ $RANDOM_NUM -gt $TRY ]]
+  then
+    TRY_NUM=$(( $TRY_NUM + 1 ))
+    GAME "\nIt's higher than that, guess again:"
+  elif [[ $RANDOM_NUM -eq $TRY ]]
+  then
+    TRY_NUM=$(( $TRY_NUM + 1 ))
+    GAMES_PLAYED=$(( $GET_GAMES_PLAYED + 1 ))
+    # check record
+    if [[ $GET_BEST_GAME -gt $TRY_NUM ]]
+    then
+      echo "NEW RECORD: You scored $TRY_NUM, and your best score was $GET_BEST_GAME."
+      # insert into new record
+      UPDATE_RECORD=$($PSQL "UPDATE users SET best_game = $TRY_NUM WHERE username='$USERNAME'")
+    fi
+    UPDATE_NUMBER_GAMES=$($PSQL "UPDATE users SET games_played = $GAMES_PLAYED WHERE username='$USERNAME'")
+    echo -e "\nYou guessed it in $TRY_NUM tries. The secret number was $TRY. Nice job!"
+    exit 0
+  else
+    echo "ERROR!"
+    exit 1
+  fi
+}
+
+GAME "$INITIAL_MESSAGE"
+
