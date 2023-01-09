@@ -14,7 +14,7 @@ then
   exit 0
 elif [[ -z $GET_USERNAME ]]
 then
-  echo "Welcome, $USERNAME! It looks like is your first time here."
+  echo -e "\nWelcome, $USERNAME! It looks like is your first time here."
   INSERT_NEW_USER=$($PSQL "INSERT INTO users(username) VALUES('$USERNAME')")
   GET_USERNAME=$($PSQL "SELECT username FROM users WHERE username='$USERNAME'")
   GET_BEST_GAME=0
@@ -22,7 +22,7 @@ then
 else
   GET_BEST_GAME=$($PSQL "SELECT best_game FROM users WHERE username='$USERNAME'")
   GET_GAMES_PLAYED=$($PSQL "SELECT games_played FROM users WHERE username='$USERNAME'")
-  echo "Welcome back, $GET_USERNAME! You have played $GET_GAMES_PLAYED games, and your best game took $GET_BEST_GAME guesses."
+  echo -e "\nWelcome back, $GET_USERNAME! You have played $GET_GAMES_PLAYED games, and your best game took $GET_BEST_GAME guesses."
 fi
 
 # GAME
