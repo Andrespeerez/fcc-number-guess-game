@@ -26,7 +26,7 @@ MAIN_MENU() {
   else
     GAMES_PLAYED=$($PSQL "SELECT COUNT(user_id) FROM games WHERE user_id='$GET_USER_ID'")
     BEST_GAME=$($PSQL "SELECT MIN(guesses) FROM games WHERE user_id='$GET_USER_ID'")
-    echo -e "\nWelcome back, $USERNAME! You have player $GAMES_PLAYED games, and your best game took $BEST_GAME guesses."
+    echo -e "\nWelcome back, $USERNAME! You have played $GAMES_PLAYED games, and your best game took $BEST_GAME guesses."
   fi
 
   # execute game
@@ -40,7 +40,7 @@ GAME() {
   # initialize number of tries
   NUM_TRIES=0
 
-  echo -e "\nGuess the secret number between 1 to 1000:"
+  echo -e "\nGuess the secret number between 1 and 1000:"
 
   # loop until player finds the final guess
   while [[ $NUMBER_TO_GUESS -ne $GUESS ]]
