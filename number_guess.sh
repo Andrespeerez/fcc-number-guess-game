@@ -31,5 +31,50 @@ MAIN_MENU() {
 
 }
 
+GAME() {
+  # 1 to 1000, both inclusive, random number
+  NUMBER_TO_GUESS=$(( 1 + $RANDOM%1000 ))
+
+  # initialize number of tries
+  NUM_TRIES=0
+
+  echo -e "\nGuess the secret number between 1 to 1000:"
+
+  # loop until player finds the final guess
+  while [[ $NUMBER_TO_GUESS -ne $GUESS ]]
+  do
+    read GUESS
+
+    # check $GUESS is valid number
+    if [[ ! $GUESS =~ ^[0-9]+$ ]]
+    then
+      echo -e "\nThat is not an integer, guess again:"
+
+    # case you guess a number lower
+    elif [[ $GUESS -lt $NUMBER_TO_GUESS ]]
+    then
+      NUM_TRIES=$(( $NUM_TRIES + 1 ))
+      echo -e "\nIt's higher than that, guess again:"
+
+    # case you guess a number higher
+    elif [[ $GUESS -gt $NUMBER_TO_GUESS ]]
+    then
+      NUM_TRIES=$(( $NUM_TRIES + 1 ))
+      echo -e "\nIt's lower than that, guess again:"
+
+    # case you guess the right number
+    else
+      NUM_TRIES=$(( $NUM_TRIES + 1 ))
+      echo -e "You guessed it in $NUM_TRIES tries. The secret number was $NUMBER_TO_GUESS. Nice job!"
+
+      # insert score to games table
+      INSERT_SCORE=$($PSQL "INSERT INTO games(user_id, guesses) VALUES($USER_ID, $NUM_TRIES)")
+    
+    fi
+  done
+
+}
+
 
 MAIN_MENU
+GAME
