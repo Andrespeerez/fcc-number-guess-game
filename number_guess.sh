@@ -70,7 +70,7 @@ GAME() {
       echo -e "You guessed it in $NUM_TRIES tries. The secret number was $NUMBER_TO_GUESS. Nice job!"
 
       # insert score to games table
-      INSERT_SCORE=$($PSQL "INSERT INTO games(user_id, guesses) VALUES($USER_ID, $NUM_TRIES)")
+      INSERT_SCORE=$($PSQL "INSERT INTO games(user_id, guesses) VALUES($GET_USER_ID, $NUM_TRIES)")
     
     fi
   done
