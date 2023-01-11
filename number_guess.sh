@@ -17,7 +17,7 @@ MAIN_MENU() {
     echo -e "\nWelcome, $USERNAME! It looks like this is your first time here."
 
     # insert new user -> database
-    INSERT_NEW_USER=$($PSQL "INSERT INTO users(name) VALUE('$USERNAME')")
+    INSERT_NEW_USER=$($PSQL "INSERT INTO users(name) VALUES('$USERNAME')")
 
     # get the user_id
     GET_USER_ID=$($PSQL "SELECT user_id FROM users WHERE name='$USERNAME'")
@@ -29,6 +29,8 @@ MAIN_MENU() {
     echo -e "\nWelcome back, $USERNAME! You have player $GAMES_PLAYED games, and your best game took $BEST_GAME guesses."
   fi
 
+  # execute game
+  GAME
 }
 
 GAME() {
@@ -75,6 +77,4 @@ GAME() {
 
 }
 
-
 MAIN_MENU
-GAME
